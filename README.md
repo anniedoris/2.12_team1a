@@ -8,6 +8,23 @@ Note that there are two folders: ```mobile_robot``` and ```ur5```. Please add co
 List of todos for UR5 code:
 
 - [X] Get basic X/Y/Z control of UR5 from laptop
-- [ ] Test
+- [ ] Get control working from arrow keys
+- [ ] Add control for A6 (and A1?)
+- [ ] Add speed control
+- [ ] Deal with singularities - cartesian limits?
 
 ### Git best practices
+
+Before you start doing any work, make sure that you ```git pull```.
+
+To commit your changes and commit them often!!!
+
+To do so, do the following:
+
+```git status``` to see what changes you have relative to the remote. You should see some things show up as red. If they are red, they will not be pushed to the remote. To add the files you want to push to the remote, do:
+
+```git add 'file_name```. If you run ```git status``` again you should see that the file has turned green! Do this for each file you want to add.
+
+Next, run ```git commit -m "type a message describing what you are adding"```.
+
+Finally, run ```git push``` to send your changes to main.
