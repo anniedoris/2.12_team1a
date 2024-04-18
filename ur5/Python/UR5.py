@@ -12,15 +12,15 @@ class UR5:
         self.current_x = self.current_global_pose[0]
         self.current_y = self.current_global_pose[1]
         self.current_z = self.current_global_pose[2]
-        self.move_velocity = 0.5
-        self.move_acceleration = 0.3
+        self.move_velocity = 0.01
+        self.move_acceleration = 6.0
         self.default_move_dist = 0.01
-        self.move_dist = 0.01 # This is a move distance in meters
+        self.move_dist = 0.001 # This is a move distance in meters
 
         # Send the robot to a good initialized configuration
         # The most important part of this is being able to "square" the robot so the end effector is flat w.r.t the ground
         # TODO: Update to a pose that we are happy with for initialization
-        self.rtde_c.moveL([0.02, -0.60, 0.50, -0.001, 3.13, 0.001], self.move_velocity, self.move_acceleration)
+        self.rtde_c.moveL([0.02, -0.60, 0.50, -0.001, 3.13, 0.001], 0.2, self.move_acceleration)
 
     def get_current_robot_info(self):
         self.current_joint_values = self.rtde_r.getActualQ()
@@ -31,28 +31,32 @@ class UR5:
         self.move_dist = new_move_dist
         return
 
-    def move_cart(self, coord, pos):
-        target_pose = self.current_global_pose
+    def vel_cart(self, coord, pos):
+        target_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 
         if coord == 'x':
             if pos == 'pos':
-                target_pose[0] += self.move_dist
+                target_vel[0] = self.move_velocity
             else:
-                target_pose[0] += -self.move_dist
+                target_vel[0] = -self.move_velocity
 
         elif coord == 'y':
             if pos == 'pos':
-                target_pose[1] += self.move_dist
+                target_vel[1] = self.move_velocity
             else:
-                target_pose[1] += -self.move_dist
+                target_vel[1] = -self.move_velocity
 
         elif coord == 'z':
             if pos == 'pos':
-                target_pose[2] += self.move_dist
+                target_vel[2] = self.move_velocity
             else:
-                target_pose[2] += -self.move_dist
+                target_vel[2] = -self.move_velocity
 
-        self.rtde_c.moveL(target_pose, self.move_velocity, self.move_acceleration)
+        self.rtde_c.jogStart(speeds = target_vel)
+        return
+
+    def zero_velocity(self):
+        self.rtde_c.jogStart(speeds = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         return
 
     def move_y(self, pos):
