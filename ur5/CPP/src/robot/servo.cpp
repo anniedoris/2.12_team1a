@@ -1,20 +1,25 @@
 #include <ESP32Servo.h>
 
-Servo myServo;
+// Adapted from https://github.com/madhephaestus/ESP32Servo/blob/master/examples/Multiple-Servo-Example-Arduino/Multiple-Servo-Example-Arduino.ino
 
-const int servoPin = 9; // GPIO pin to which the servo is connected
+Servo myServo1;
+Servo myServo2;
+
+const int servoPin1 = 9; // GPIO pin to which the servo is connected
+const int servoPin2 = 10;
 
 void setup() 
 {
-  myServo.attach(servoPin);
+  myServo1.attach(servoPin1);
+  myServo2.attach(servoPin2);
 }
 
 void loop() 
 {
-  myServo.write(0);    // Move the servo to 0 degrees
+  myServo1.write(0);    // Move the servo to 0 degrees
   delay(1000);         // Wait for 1 second
-  myServo.write(90);   // Move the servo to 90 degrees
+  myServo1.write(90);   // Move the servo to 90 degrees
   delay(1000);         // Wait for 1 second
-  myServo.write(180);  // Move the servo to 180 degrees
+  myServo1.write(150);  // Move the servo to 180 degrees
   delay(1000);         // Wait for 1 second
 }
