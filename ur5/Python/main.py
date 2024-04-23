@@ -25,6 +25,8 @@ while True:
         radius_neg_key_enabled = True
         z_pos_key_enabled = True
         z_neg_key_enabled = True
+        a6_neg_key_enabled = True
+        a6_pos_key_enabled = True
     else:
         if last_key_pressed == THETA_POS_KEY:
             theta_pos_key_enabled = False
@@ -38,6 +40,10 @@ while True:
             z_neg_key_enabled = False
         elif last_key_pressed == Z_POS_KEY:
             z_pos_key_enabled = False
+        elif last_key_pressed == A6_NEG_KEY:
+            a6_neg_key_enabled = False
+        elif last_key_pressed == A6_POS_KEY:
+            a6_pos_key_enabled = False
         print(f"{last_key_pressed} KEY IS DISTABLED BECAUSE OF JOINT LIMITS")
 
     robot.get_current_robot_info()
@@ -48,7 +54,7 @@ while True:
     print("Robot joint coords: ")
     print(print_degrees(robot.current_joint_values))
 
-    all_keys_enabled = [theta_pos_key_enabled, theta_neg_key_enabled, radius_pos_key_enabled, radius_neg_key_enabled, z_pos_key_enabled, z_neg_key_enabled]
+    all_keys_enabled = [theta_pos_key_enabled, theta_neg_key_enabled, radius_pos_key_enabled, radius_neg_key_enabled, z_pos_key_enabled, z_neg_key_enabled, a6_neg_key_enabled, a6_pos_key_enabled]
 
     if keyboard.is_pressed('1') and all(all_keys_enabled):
         robot.move_velocity = 0.01
@@ -82,6 +88,20 @@ while True:
     elif keyboard.is_pressed(Z_POS_KEY) and z_pos_key_enabled:
         robot.vel_polar('z', 'pos')
         last_key_pressed = Z_POS_KEY
+
+    elif keyboard.is_pressed(A6_POS_KEY) and a6_pos_key_enabled:
+        # robot.vel_polar('z', 'pos')
+        # robot.vel_joint('a6', 'pos')
+        # TODO: figure out how to add A6 control
+        print("A6 +")
+        last_key_pressed = A6_POS_KEY
+
+    elif keyboard.is_pressed(A6_NEG_KEY) and a6_neg_key_enabled:
+        # robot.vel_polar('z', 'pos')
+        # robot.vel_joint('a6', 'neg')
+        # TODO: figure out ho to add A6 control
+        print("A6 -")
+        last_key_pressed = A6_NEG_KEY
         
     else:
         robot.zero_velocity()

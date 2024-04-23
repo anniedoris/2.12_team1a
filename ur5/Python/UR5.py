@@ -67,6 +67,19 @@ class UR5:
 
         self.rtde_c.jogStart(speeds = target_vel)
         return
+
+    def vel_joint(self, coord, pos):
+        target_joints = self.current_joint_values
+
+        if coord == 'a6':
+            if pos == 'pos':
+                target_joints[5] += 0.01
+            else:
+                target_joints[5] = target_joints[5] - 0.01
+
+        # self.rtde_c.speedJ(target_vel, self.move_acceleration, 0.001)
+        self.rtde_c.moveJ(target_joints, self.move_velocity, self.move_acceleration, True)
+        return
     
     def limitCheck(self):
         limit_list = []
@@ -117,6 +130,7 @@ class UR5:
 
     def zero_velocity(self):
         self.rtde_c.jogStart(speeds = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        # self.rtde_c.speedJ(qd = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         return
 
     def move_y(self, pos):
