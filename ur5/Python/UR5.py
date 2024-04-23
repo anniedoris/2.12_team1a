@@ -7,7 +7,7 @@ class UR5:
         self.current_global_pose = [0, 0, 0, 0, 0, 0] # Global coordinate system pose
         self.current_rotated_pose = [0, 0, 0, 0, 0, 0] # Coordinate system defined by rotation of the base joint
         self.current_joint_values = [0, 0, 0, 0, 0, 0] # Storing current joint values
-        self.current_polar = [0,0]
+        self.current_polar = [0,0,0] # Current polar will be stored as r, theta, z
         self.rtde_c = rtde_control.RTDEControlInterface(ip_address) # Object for control
         self.rtde_r = rtde_receive.RTDEReceiveInterface(ip_address) # Object for receiving
         self.current_x = self.current_global_pose[0]
@@ -29,8 +29,10 @@ class UR5:
         self.current_x = self.current_global_pose[0]
         self.current_y = self.current_global_pose[1]
         self.current_z = self.current_global_pose[2]
-        self.current_polar[1] = self.current_joint_values[0]
-        self.current_polar[0] = np.sqrt(self.current_x**2+self.current_y**2)
+        
+        self.current_polar[0] = np.sqrt(self.current_x**2+self.current_y**2) # get r value
+        self.current_polar[1] = np.atan2(self.current_y, self.current_x) # get theta value, just use A1 joint
+        self.current_polar[2] = self.current_z # get z value, just use global z coordinate
         return
 
     def update_move_dist(self, new_move_dist):
@@ -62,20 +64,12 @@ class UR5:
         return
 
     def vel_polar(self, coord, pos):
+        
         target_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         angular_velocity = self.move_velocity
         radius = self.current_polar[0]
-
-        if coord == 'theta':
-            if pos:
-                target_vel[0] = angular_velocity * radius * np.cos(-self.current_polar[1])
-                target_vel[1] = angular_velocity * radius * np.sin(-self.current_polar[1])
-
-            else:
-                target_vel[0] = angular_velocity * radius * np.cos(self.current_polar[1])
-                target_vel[1] = angular_velocity * radius * np.sin(self.current_polar[1])
         
-        elif coord == 'radius':
+        if coord == 'radius':
             if pos == 'pos':
                 target_vel[0] = self.move_velocity* np.cos(self.current_polar[1])
                 target_vel[1] = self.move_velocity* np.sin(self.current_polar[1])
@@ -83,6 +77,15 @@ class UR5:
             else:
                 target_vel[0] = -self.move_velocity* np.cos(self.current_polar[1])
                 target_vel[1] = -self.move_velocity* np.sin(self.current_polar[1])
+
+        elif coord == 'theta':
+            if pos:
+                target_vel[0] = -self.move_velocity * np.sin(self.current_polar[1])
+                target_vel[1] = self.move_velocity * np.cos(self.current_polar[1])
+
+            else:
+                target_vel[0] = self.move_velocity * np.sin(self.current_polar[1])
+                target_vel[1] = -self.move_velocity * np.cos(self.current_polar[1])
         
         elif coord == 'z':
             if pos == 'pos':
