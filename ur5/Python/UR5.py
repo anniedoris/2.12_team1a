@@ -2,6 +2,8 @@
 import rtde_control
 import rtde_receive
 import numpy as np
+import math
+
 class UR5:
     def __init__(self, ip_address):
         self.current_global_pose = [0, 0, 0, 0, 0, 0] # Global coordinate system pose
@@ -17,11 +19,14 @@ class UR5:
         self.move_acceleration = 6.0
         self.default_move_dist = 0.01
         self.move_dist = 0.001 # This is a move distance in meters
+        self.joint_lower_limits = [-math.pi*2.0, -math.pi*2.0, -math.pi*2.0, -math.pi*2.0, -math.pi*2.0, -math.pi*2.0]
+        self.joint_upper_limits = [math.pi*2.0, math.pi*2.0, math.pi*2.0, math.pi*2.0, math.pi*2.0, math.pi*2.0]
+        self.buffer_limit = 0.1 # radians buffer limit
 
         # Send the robot to a good initialized configuration
         # The most important part of this is being able to "square" the robot so the end effector is flat w.r.t the ground
         # TODO: Update to a pose that we are happy with for initialization
-        self.rtde_c.moveL([0.02, -0.60, 0.50, -0.001, 3.13, 0.001], 0.2, self.move_acceleration)
+        self.rtde_c.moveL([-0.015, -0.55, 0.444, -0.001, 3.13, 0.001], 0.2, self.move_acceleration)
 
     def get_current_robot_info(self):
         self.current_joint_values = self.rtde_r.getActualQ()
@@ -31,7 +36,7 @@ class UR5:
         self.current_z = self.current_global_pose[2]
         
         self.current_polar[0] = np.sqrt(self.current_x**2+self.current_y**2) # get r value
-        self.current_polar[1] = np.atan2(self.current_y, self.current_x) # get theta value, just use A1 joint
+        self.current_polar[1] = np.arctan2(self.current_y, self.current_x) # get theta value, just use A1 joint
         self.current_polar[2] = self.current_z # get z value, just use global z coordinate
         return
 
@@ -62,6 +67,20 @@ class UR5:
 
         self.rtde_c.jogStart(speeds = target_vel)
         return
+    
+    def limitCheck(self):
+        limit_list = []
+        for i, j in enumerate(self.current_joint_values):
+            if (j < (self.joint_upper_limits[5] - self.buffer_limit)) and (j > (self.joint_lower_limits[i] + self.buffer_limit)):
+                limit_list.append(True)
+            else:
+                limit_list.append(False)
+        
+        if all(limit_list):
+            return True
+        else:
+            print("Stopping before singularity")
+            return False
 
     def vel_polar(self, coord, pos):
         
@@ -79,7 +98,7 @@ class UR5:
                 target_vel[1] = -self.move_velocity* np.sin(self.current_polar[1])
 
         elif coord == 'theta':
-            if pos:
+            if pos == 'pos':
                 target_vel[0] = -self.move_velocity * np.sin(self.current_polar[1])
                 target_vel[1] = self.move_velocity * np.cos(self.current_polar[1])
 
