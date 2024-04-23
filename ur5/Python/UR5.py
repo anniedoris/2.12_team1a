@@ -1,12 +1,13 @@
 
 import rtde_control
 import rtde_receive
-
+import numpy as np
 class UR5:
     def __init__(self, ip_address):
         self.current_global_pose = [0, 0, 0, 0, 0, 0] # Global coordinate system pose
         self.current_rotated_pose = [0, 0, 0, 0, 0, 0] # Coordinate system defined by rotation of the base joint
         self.current_joint_values = [0, 0, 0, 0, 0, 0] # Storing current joint values
+        self.current_polar = [0,0]
         self.rtde_c = rtde_control.RTDEControlInterface(ip_address) # Object for control
         self.rtde_r = rtde_receive.RTDEReceiveInterface(ip_address) # Object for receiving
         self.current_x = self.current_global_pose[0]
@@ -25,6 +26,11 @@ class UR5:
     def get_current_robot_info(self):
         self.current_joint_values = self.rtde_r.getActualQ()
         self.current_global_pose = self.rtde_r.getActualTCPPose()
+        self.current_x = self.current_global_pose[0]
+        self.current_y = self.current_global_pose[1]
+        self.current_z = self.current_global_pose[2]
+        self.current_polar[1] = self.current_joint_values[0]
+        self.current_polar[0] = np.sqrt(self.current_x**2+self.current_y**2)
         return
 
     def update_move_dist(self, new_move_dist):
@@ -52,6 +58,38 @@ class UR5:
             else:
                 target_vel[2] = -self.move_velocity
 
+        self.rtde_c.jogStart(speeds = target_vel)
+        return
+
+    def vel_polar(self, coord, pos):
+        target_vel = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        angular_velocity = self.move_velocity
+        radius = self.current_polar[0]
+
+        if coord == 'theta':
+            if pos:
+                target_vel[0] = angular_velocity * radius * np.cos(-self.current_polar[1])
+                target_vel[1] = angular_velocity * radius * np.sin(-self.current_polar[1])
+
+            else:
+                target_vel[0] = angular_velocity * radius * np.cos(self.current_polar[1])
+                target_vel[1] = angular_velocity * radius * np.sin(self.current_polar[1])
+        
+        elif coord == 'radius':
+            if pos == 'pos':
+                target_vel[0] = self.move_velocity* np.cos(self.current_polar[1])
+                target_vel[1] = self.move_velocity* np.sin(self.current_polar[1])
+            
+            else:
+                target_vel[0] = -self.move_velocity* np.cos(self.current_polar[1])
+                target_vel[1] = -self.move_velocity* np.sin(self.current_polar[1])
+        
+        elif coord == 'z':
+            if pos == 'pos':
+                target_vel[2] = self.move_velocity
+            else:
+                target_vel[2] = -self.move_velocity
+        
         self.rtde_c.jogStart(speeds = target_vel)
         return
 
