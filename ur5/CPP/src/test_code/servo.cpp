@@ -9,9 +9,9 @@ Servo servo2;
 
 // Define min and max positions for the servos
 const int SERVO1_MIN = 75; // Minimum position for servo1
-const int SERVO1_MAX = 110; // Maximum position for servo1
+const int SERVO1_MAX = 115; // Maximum position for servo1
 const int SERVO2_MIN = 75; // Minimum position for servo2
-const int SERVO2_MAX = 110; // Maximum position for servo2
+const int SERVO2_MAX = 115; // Maximum position for servo2
 
 int pos = 90; // Initial position for both servos (middle)
 
