@@ -11,7 +11,7 @@ void setup() {
 
   // wait for serial port to open on native usb devices
   while (!Serial) {
-    delay(1);
+    delay(100);
   }
   
   Serial.println("Adafruit VL6180x test!");
@@ -25,7 +25,7 @@ void setup() {
 void loop() {
   float lux = vl.readLux(VL6180X_ALS_GAIN_5);
 
-  Serial.print("Lux: "); Serial.println(lux);
+  // Serial.print("Lux: "); Serial.println(lux);
   
   uint8_t range = vl.readRange();
   uint8_t status = vl.readRangeStatus();
@@ -63,5 +63,5 @@ void loop() {
   else if (status == VL6180X_ERROR_RANGEOFLOW) {
     Serial.println("Range reading overflow");
   }
-  delay(50);
+  delay(5000);
 }
