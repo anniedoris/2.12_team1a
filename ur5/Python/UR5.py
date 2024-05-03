@@ -124,6 +124,12 @@ class UR5:
                 target_vel[2] = self.move_velocity
             else:
                 target_vel[2] = -self.move_velocity
+       
+        elif coord == 'a6':
+            if pos == 'pos':
+                target_vel[5] = self.move_velocity*5
+            else:
+                target_vel[5] = -self.move_velocity*5
         
         self.rtde_c.jogStart(speeds = target_vel)
         return

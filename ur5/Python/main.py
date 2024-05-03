@@ -90,14 +90,14 @@ while True:
         last_key_pressed = Z_POS_KEY
 
     elif keyboard.is_pressed(A6_POS_KEY) and a6_pos_key_enabled:
-        # robot.vel_polar('z', 'pos')
+        robot.vel_polar('a6', 'pos')
         # robot.vel_joint('a6', 'pos')
         # TODO: figure out how to add A6 control
         print("A6 +")
         last_key_pressed = A6_POS_KEY
 
     elif keyboard.is_pressed(A6_NEG_KEY) and a6_neg_key_enabled:
-        # robot.vel_polar('z', 'pos')
+        robot.vel_polar('a6', 'neg')
         # robot.vel_joint('a6', 'neg')
         # TODO: figure out ho to add A6 control
         print("A6 -")
