@@ -1,7 +1,7 @@
 #ifndef PINOUT
 #define PINOUT
 
-//motor pins
+// electromagnet pins
 #define DIR1 39
 #define PWM1 41
 
