@@ -26,7 +26,9 @@ class UR5:
         # Send the robot to a good initialized configuration
         # The most important part of this is being able to "square" the robot so the end effector is flat w.r.t the ground
         # TODO: Update to a pose that we are happy with for initialization
-        self.rtde_c.moveL([-0.015, -0.55, 0.444, -0.001, 3.13, 0.001], 0.2, self.move_acceleration)
+        self.rtde_c.moveL([-0.612, -0.3, 0.5, 1.4, -0.783, -0.807], 0.2, self.move_acceleration)
+        #self.rtde_c.moveJ([11, -0.3, 0.5, 1.4, -0.783, -0.807], 0.2, self.move_acceleration)
+        # self.rtde_c.moveL([-0.612, -0.3, 0.6, 1.861, -0.03, -1.72], 0.2, self.move_acceleration)
 
     def get_current_robot_info(self):
         self.current_joint_values = self.rtde_r.getActualQ()
@@ -114,6 +116,7 @@ class UR5:
             if pos == 'pos':
                 target_vel[0] = -self.move_velocity * np.sin(self.current_polar[1])
                 target_vel[1] = self.move_velocity * np.cos(self.current_polar[1])
+                
 
             else:
                 target_vel[0] = self.move_velocity * np.sin(self.current_polar[1])
