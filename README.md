@@ -5,8 +5,31 @@ Note that there are two folders: ```mobile_robot``` and ```ur5```. Please add co
 ## Mobile Robot
 
 ### List of Code
+Below is a list of files and what they control for the mobile robot. Two files are required to run the controller, and four files are required to run the robot. 
+- Controller: ```controller_main.cpp``` and ```controller_wireless.cpp```
+- Robot: ```robot_drive.cpp```, ```robot_main.cpp```, ```robot_motion_control.cpp```, and ```robot_wireless.cpp```
 
 ### How to Run the Code
+To drive the mobile robot with the joystick: 
+1. Find the mac address of the robot and controller by running ```get_mac.cpp``` on the controller and robot.
+2. Enter the mac address in ```wireless.h```
+	Set const uint8_t controllerAddr[] = controller mac address 
+	Set const uint8_t robotAddr[] = robot mac address 
+3. You need ```robot_pinout.h```, ```robot_motion_control.h```, ```robot_drive.h```, ```controller_pinout.h```, ```wireless.h``` and ```wireless.cpp``` as header and .cpp files.
+4. Put ```robot_drive.cpp```, ```robot_main.cpp```, ```robot_motion_control.cpp``` and ```robot_wireless.cpp``` in the robot folder. Upload all these files to the mobile robot's ESP32. 
+5. Put ```controller_main.cpp``` and ```controller_wireless.cpp``` in the controller folder. Upload both files to the controller.
+6. Move the joystick and the robot will be moving. 
+
+To stream video from the RealSense camera to a PC:
+* Follow this tutorial: https://jetsonhacks.com/2019/12/22/install-realsense-camera-in-5-minutes-jetson-nano/
+* Make sure the RealSense camera is connected to the Jetson Orin Nano with 
+1. Install FFmpeg using home-brew on the PC and the Jetson Orin Nano.
+2. Enter this into the terminal on the Jetson Orin Nano: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```
+3. Enter the terminal command ```ifconfig``` on the PC's terminal to check the IP address of the PC.
+4. Replace the numbers after ```rtp://``` in the following text with the IP address of the PC: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```. Run this command in the Jetson's terminal.
+5. Run this command in the PC's terminal: ```ffplay -protocol_whitelist file,udp,rtp -i stream_ip.sdp```
+6. Run this command in the Jetson's terminal (substitute the IP address with the PC's IP address): ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```
+7. Video will stream from the camera to the PC screen. 
 
 ## UR5
 
