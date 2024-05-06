@@ -2,18 +2,29 @@
 
 Note that there are two folders: ```mobile_robot``` and ```ur5```. Please add code to the relevant folder.
 
-### Mobile Robot
+## Mobile Robot
 
-### UR5
-List of todos for UR5 code:
+### List of Code
 
-- [X] Get basic X/Y/Z control of UR5 from laptop
-- [ ] Get control working from arrow keys
-- [ ] Add control for A6 (and A1?)
-- [ ] Add speed control
-- [ ] Deal with singularities - cartesian limits?
+### How to Run the Code
 
-### Git best practices
+## UR5
+
+### List of Code
+Below is a list of files and what they control on the UR5.
+
+End effector control:
+
+- IR control: ```ur5/CPP/src/test_code/ir_threshold.cpp```
+- Gripper control: ```ur5/CPP/src/test_code/gripper.cpp```
+
+Arm control:
+
+- Motion control: ```ur5/Python/main.py```
+
+### How to Run the Code
+
+## Git best practices
 
 Before you start doing any work, make sure that you ```git pull```.
 
