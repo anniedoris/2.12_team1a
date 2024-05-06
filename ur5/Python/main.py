@@ -34,7 +34,7 @@ while True:
             theta_neg_key_enabled = False
         elif last_key_pressed == RADIUS_POS_KEY:
             radius_pos_key_enabled = False
-        elif last_key_pressed == RADIUS_NEG_KEY:\
+        elif last_key_pressed == RADIUS_NEG_KEY:
             radius_neg_key_enabled = False
         elif last_key_pressed == Z_NEG_KEY:
             z_neg_key_enabled = False
@@ -48,22 +48,40 @@ while True:
 
     robot.get_current_robot_info()
     print("Robot pose: ")
-    print(robot.current_global_pose)
-    print("Robot cylindrical coords: ")
-    print(robot.current_polar)
-    print("Robot joint coords: ")
-    print(print_degrees(robot.current_joint_values))
+    print(robot.current_global_pose[2])
+    #print("Robot cylindrical coords: ")
+    #print(robot.current_polar)
+    #print("Robot joint coords: ")
+    #print(print_degrees(robot.current_joint_values))
 
     all_keys_enabled = [theta_pos_key_enabled, theta_neg_key_enabled, radius_pos_key_enabled, radius_neg_key_enabled, z_pos_key_enabled, z_neg_key_enabled, a6_neg_key_enabled, a6_pos_key_enabled]
 
     if keyboard.is_pressed('1') and all(all_keys_enabled):
         robot.move_velocity = 0.01
-    
+
     elif keyboard.is_pressed('2') and all(all_keys_enabled):
         robot.move_velocity = 0.1
 
     elif keyboard.is_pressed('3') and all(all_keys_enabled):
         robot.move_velocity = 0.2
+    
+    elif keyboard.is_pressed('f') and all(all_keys_enabled):
+        robot.vel_polar('height', 'pos')
+
+    #elif keyboard.is_pressed('l') and all(all_keys_enabled):
+        #robot.vel_polar('height', 'neg')
+
+    elif keyboard.is_pressed('v') and all(all_keys_enabled):
+        robot.vel_polar('height', 'neg')
+
+    elif keyboard.is_pressed('z') and all(all_keys_enabled):
+        robot.vel_polar('home', 'left')
+
+    elif keyboard.is_pressed('x') and all(all_keys_enabled):
+        robot.vel_polar('home', 'middle')
+
+    elif keyboard.is_pressed('c') and all(all_keys_enabled):
+        robot.vel_polar('home', 'right')
 
     elif keyboard.is_pressed(THETA_POS_KEY) and theta_pos_key_enabled:
         robot.vel_polar('theta', 'pos')

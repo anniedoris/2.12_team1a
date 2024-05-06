@@ -22,12 +22,17 @@ class UR5:
         self.joint_lower_limits = [-math.pi*2.0, -math.pi*2.0, -math.pi*2.0, -math.pi*2.0, -math.pi*2.0, -math.pi*2.0]
         self.joint_upper_limits = [math.pi*2.0, math.pi*2.0, math.pi*2.0, math.pi*2.0, math.pi*2.0, math.pi*2.0]
         self.buffer_limit = 0.1 # radians buffer limit
-
+        home_middle = [44.38, -65.62, 58.64, 6.8, 90.93, 0.2]
+        home_right = [127, -65.62, 58.64, 6.8, 90.93, 0.2]
+        home_left = [-45, -65.62, 58.64, 6.8, 90.93, 0.2]
+        self.home_right = [(math.pi * i)/180.0 for i in home_right]
+        self.home_left = [(math.pi * i)/180.0 for i in home_left]
+        self.home_middle = [(math.pi * i)/180.0 for i in home_middle]
         # Send the robot to a good initialized configuration
         # The most important part of this is being able to "square" the robot so the end effector is flat w.r.t the ground
         # TODO: Update to a pose that we are happy with for initialization
-        self.rtde_c.moveL([-0.612, -0.3, 0.5, 1.4, -0.783, -0.807], 0.2, self.move_acceleration)
-        #self.rtde_c.moveJ([11, -0.3, 0.5, 1.4, -0.783, -0.807], 0.2, self.move_acceleration)
+        #self.rtde_c.moveL([-0.612, -0.3, 0.5, 1.4, -0.783, -0.807], 0.2, self.move_acceleration)
+        self.rtde_c.moveJ(self.home_middle, 0.2, self.move_acceleration)
         # self.rtde_c.moveL([-0.612, -0.3, 0.6, 1.861, -0.03, -1.72], 0.2, self.move_acceleration)
 
     def get_current_robot_info(self):
@@ -111,16 +116,40 @@ class UR5:
             else:
                 target_vel[0] = -self.move_velocity* np.cos(self.current_polar[1])
                 target_vel[1] = -self.move_velocity* np.sin(self.current_polar[1])
-
+        elif coord == 'height':
+            if pos == 'pos':
+                new_height = self.current_global_pose
+                new_height[2] = 0.65
+                self.rtde_c.jogStop()
+                self.rtde_c.moveL(new_height,0.15,self.move_acceleration)
+                self.rtde_c.jogStart(speeds = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+            else:
+                new_height = self.current_global_pose
+                new_height[2] = 0.1
+                self.rtde_c.jogStop()
+                self.rtde_c.moveL(new_height,0.15,self.move_acceleration)
+                self.rtde_c.jogStart(speeds = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        elif coord == 'home':
+            self.rtde_c.jogStop()
+            if pos == 'left':
+                self.rtde_c.moveJ(self.home_left, 0.4, self.move_acceleration)
+            
+            elif pos == 'right':
+                self.rtde_c.moveJ(self.home_right, 0.4, self.move_acceleration)
+            
+            elif pos == 'middle':
+                self.rtde_c.moveJ(self.home_middle, 0.4, self.move_acceleration)
+            self.rtde_c.jogStart(speeds = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
         elif coord == 'theta':
             if pos == 'pos':
                 target_vel[0] = -self.move_velocity * np.sin(self.current_polar[1])
                 target_vel[1] = self.move_velocity * np.cos(self.current_polar[1])
-                
+                target_vel[5] = self.move_velocity *np.pi/2
 
             else:
                 target_vel[0] = self.move_velocity * np.sin(self.current_polar[1])
                 target_vel[1] = -self.move_velocity * np.cos(self.current_polar[1])
+                target_vel[5] = -self.move_velocity *np.pi/2
         
         elif coord == 'z':
             if pos == 'pos':
