@@ -14,6 +14,9 @@
   corresponded with pixel readings of greater than 29, so we set the threshold to 29. We then tally all the
   pixels in the field of view that are above this threshold, and report that number through the display port.
   More than 50 pixels with a threshold of greater than 29 meant that TIM was located.
+
+  This is the file we are using in the competition, but you can run the IR camera with the display by using
+  ```ir_camera.cpp.```
 */
 
 // Set up the pins
@@ -25,7 +28,8 @@ Adafruit_HX8357 tft = Adafruit_HX8357(TFT_CS, TFT_DC, TFT_RST);
 Adafruit_MLX90640 mlx;
 float frame[32*24]; // buffer for full frame of temperatures
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   while (!Serial) delay(10); // wait for serial port to connect
   Serial.println("Adafruit MLX90640 Simple Test");
@@ -40,8 +44,8 @@ void setup() {
   mlx.setRefreshRate(MLX90640_2_HZ);
 }
 
-void loop() {
-
+void loop()
+{
   // Try to get the frame
   if (mlx.getFrame(frame) != 0) {
     Serial.println("Failed to read frame");
@@ -52,8 +56,10 @@ void loop() {
   // `yellow' threshold of 29.
   std::vector<int> num_values;
 
-  for (uint8_t h = 0; h < 24; h++) {
-    for (uint8_t w = 0; w < 32; w++) {
+  for (uint8_t h = 0; h < 24; h++) 
+  {
+    for (uint8_t w = 0; w < 32; w++)
+    {
       float temperature = frame[h * 32 + w];
 
       if (temperature > 29) // filters for yellow or above
