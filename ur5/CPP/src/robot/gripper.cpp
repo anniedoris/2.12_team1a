@@ -30,9 +30,9 @@ void setup() {
 	ESP32PWM::allocateTimer(2); // channel 2
 	ESP32PWM::allocateTimer(3); // channel 3
 	servo1.setPeriodHertz(50); // standard 50 hz servo
-	servo1.attach(9, 500, 2500); // Servo 1 on pin 9
+	servo1.attach(6, 500, 2500); // Servo 1 on pin 6
   servo2.setPeriodHertz(50); // standard 50 hz servo
-  servo2.attach(6, 500, 2500); // Servo 2 on pin 6
+  servo2.attach(9, 500, 2500); // Servo 2 on pin 9
 
   motor.setup(); // Set up the electromagnet
   
@@ -68,9 +68,11 @@ void loop() {
     }
 
     if (input == '1') {
+      // If '1' is pressed, turn on the electromagnet
       motor.drive(1.0);
       Serial.println("Electromagnet turned on");
     } else if (input == '0') {
+      // If '0' is pressed, turn off the electromagnet
       motor.drive(0.0);
       Serial.println("Electromagnet turned off");
     }
