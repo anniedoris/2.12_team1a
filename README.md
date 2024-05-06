@@ -5,7 +5,8 @@ Note that there are two folders: ```mobile_robot``` and ```ur5```. Please add co
 ## Mobile Robot
 
 ### List of Code
-Below is a list of files and what they control for the mobile robot. Two files are required to run the controller, and four files are required to run the robot. 
+Below is a list of files and what they control for the mobile robot. Two files are required to run the controller, and four files are required to run the robot. For the Intel RealSense camera, terminal commands are sufficient to stream video to a PC. 
+
 - Controller: ```controller_main.cpp``` and ```controller_wireless.cpp```
 - Robot: ```robot_drive.cpp```, ```robot_main.cpp```, ```robot_motion_control.cpp```, and ```robot_wireless.cpp```
 
@@ -23,7 +24,7 @@ To drive the mobile robot with the joystick:
 To stream video from the RealSense camera to a PC:
 * Follow this tutorial: https://jetsonhacks.com/2019/12/22/install-realsense-camera-in-5-minutes-jetson-nano/
 * Make sure the RealSense camera is connected to the Jetson Orin Nano with 
-1. Install FFmpeg using home-brew on the PC and the Jetson Orin Nano.
+1. Install FFmpeg using Homebrew on the PC and the Jetson Orin Nano.
 2. Enter this into the terminal on the Jetson Orin Nano: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```
 3. Enter the terminal command ```ifconfig``` on the PC's terminal to check the IP address of the PC.
 4. Replace the numbers after ```rtp://``` in the following text with the IP address of the PC: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```. Run this command in the Jetson's terminal.
