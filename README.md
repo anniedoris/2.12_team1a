@@ -25,12 +25,13 @@ To stream video from the RealSense camera to a PC:
 * Follow this tutorial: https://jetsonhacks.com/2019/12/22/install-realsense-camera-in-5-minutes-jetson-nano/
 * Make sure the RealSense camera is connected to the Jetson Orin Nano with 
 1. Install FFmpeg using Homebrew on the PC and the Jetson Orin Nano.
-2. Enter this into the terminal on the Jetson Orin Nano: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```
-3. Enter the terminal command ```ifconfig``` on the PC's terminal to check the IP address of the PC.
+2. Enter this into the terminal on the Jetson Orin Nano: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000``` (Check network settings on the PC to get the PC's IP address. Replace the numbers after ```rtp://``` with your PC's IP address.)
+3. Enter the terminal command ```ifconfig``` on the PC's terminal to confirm the Jetson Orin Nano IP address.
 4. Replace the numbers after ```rtp://``` in the following text with the IP address of the PC: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```. Run this command in the Jetson's terminal.
-5. Run this command in the PC's terminal: ```ffplay -protocol_whitelist file,udp,rtp -i stream_ip.sdp```
-6. Run this command in the Jetson's terminal (substitute the IP address with the PC's IP address): ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```
-7. Video will stream from the camera to the PC screen. 
+5. Step 4 generates values for a ```.sdp``` file. Copy the terms and save them as .sdp (in this case we saved them as ```real.sdp```. 
+6. Run this command in the PC's terminal: ```ffplay -protocol_whitelist file,udp,rtp -i stream_ip.sdp```
+7. Run this command in the Jetson's terminal (substitute the IP address with the PC's IP address): ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```
+8. Video will stream from the camera to the PC screen. 
 
 ## UR5
 
@@ -53,12 +54,17 @@ You will need two computers. One will manage IR, the other will manage electroma
 
 For IR control:
 1. Open VSCode in the CPP folder.
-2. Move the ```ur5/CPP/src/test_code/ir_threshold.cpp``` into the ```robot``` folder and upload to microcontrolelr on the end effector. 
+2. Move the ```ur5/CPP/src/test_code/ir_threshold.cpp``` into the ```robot``` folder and upload to microcontroller on the end effector. 
 3. Reset microcontroller.
 4. Open serial monitor on computer. You should see print outs of the IR readings.
 
 For gripper control:
-MICHAEL TODO
+1. Open VSCode in the CPP folder.
+2. Move the ```gripper.cpp``` into the ```robot``` folder and upload to microcontroller connected to the two power supplies, servos, and electromagnet.
+3. Reset microcontroller. 
+4. Open serial monitor on computer. 
+5. Press the "i" key to move the gripper to its closed (inner) position. Press the "o" key to move the gripper to its open (outer) position. Press the "m" key to move the gripper to its middle (halfway open) position.
+6. Press the "1" key to turn on the electromagnet. Press the "0" key to turn off the electromagnet. 
 
 **Motion control:**
 
@@ -66,7 +72,7 @@ MICHAEL TODO
 2. ```cd``` into the ```ur5/Python/``` folder and run ```main.py```
 3. The robot should move to an initial home position. You can then run any of the following commands:
 
-- Theta cylindrical coordaintes (relative to robot base): left/right arrow keys
+- Theta cylindrical coordinates (relative to robot base): left/right arrow keys
 - Radius cylindrical coordinates (in/out from robot base): up/down arrow keys
 - Z cylindrical coordinates (height control): q/a keys
 - Speed control: 1, 2, and 3 keys (increasing speed)
