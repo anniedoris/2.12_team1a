@@ -1,8 +1,10 @@
+//Modified by Joo Won to allow 2 motors
 #ifndef ROBOT_PINOUT_H
 #define ROBOT_PINOUT_H
 
 //motor pins
-#define NUM_MOTORS 4
+#define NUM_MOTORS 2
+ 
 #define A_DIR1 39
 #define A_PWM1 41
 #define A_DIR2 40

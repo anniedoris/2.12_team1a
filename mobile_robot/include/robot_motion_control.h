@@ -1,6 +1,8 @@
 #ifndef ROBOT_MOTION_CONTROL_H
 #define ROBOT_MOTION_CONTROL_H
 
+//these gotta change hard!
+
 // wheel radius in meters
 #define r 0.06
 // distance from back wheel to center in meters
