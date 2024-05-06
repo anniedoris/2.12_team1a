@@ -26,7 +26,7 @@ To stream video from the RealSense camera to a PC:
 * Make sure the RealSense camera is connected to the Jetson Orin Nano with 
 1. Install FFmpeg using Homebrew on the PC and the Jetson Orin Nano.
 2. Enter this into the terminal on the Jetson Orin Nano: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000``` (Check network settings on the PC to get the PC's IP address. Replace the numbers after ```rtp://``` with your PC's IP address.)
-3. Enter the terminal command ```ifconfig``` on the PC's terminal to confirm the Jetson Orin Nano IP address.
+3. Enter the terminal command ```ifconfig``` on the Jetson's terminal to confirm the Jetson Orin Nano IP address.
 4. Replace the numbers after ```rtp://``` in the following text with the IP address of the PC: ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```. Run this command in the Jetson's terminal.
 5. Step 4 generates values for a ```.sdp``` file. Copy the terms and save them as .sdp (in this case we saved them as ```real.sdp```. 
 6. Run this command in the PC's terminal: ```ffplay -protocol_whitelist file,udp,rtp -i stream_ip.sdp```
