@@ -9,6 +9,7 @@ Below is a list of files and what they control for the mobile robot. Two files a
 
 - Controller: ```controller_main.cpp``` and ```controller_wireless.cpp```
 - Robot: ```robot_drive.cpp```, ```robot_main.cpp```, ```robot_motion_control.cpp```, and ```robot_wireless.cpp```
+- SLAM
 
 ### How to Run the Code
 To drive the mobile robot with the joystick: 
@@ -32,6 +33,14 @@ To stream video from the RealSense camera to a PC:
 6. Run this command in the PC's terminal: ```ffplay -protocol_whitelist file,udp,rtp -i stream_ip.sdp```
 7. Run this command in the Jetson's terminal (substitute the IP address with the PC's IP address): ```ffmpeg -f v4l2 -i /dev/video4 -c:v libx264 -preset ultrafast -crf 25  -b:v 6M -f rtp rtp://192.168.217.137:2000```
 8. Video will stream from the camera to the PC screen. 
+
+To run SLAM code:
+1. Install the following: ```OpenCV```, ```Pangolin```, ```Eigen3```, ```DBoW2```, ```g2o```
+2. Ensure the video stream is running from the Intel RealSense camera (see previous section). Turn each frame of the video into a ```.png``` file using the steps in the previous section (use ffmpeg). These images will be fed into the SLAM algorithm. 
+3. Open terminal and navigate to the ```ORB_SLAM2-master``` directory.
+3. Execute the following command in terminal: ```../Tunnel/Monocular/mono_tum Vocabulary/ORBvoc.txt ../Tunnel/Monocular/tunnel.yaml ../Tunnel/Monocular/```
+
+* The ```Tunnel``` folder also includes images and configuration data from the mapping that was performed with the mobile robot. 
 
 ## UR5
 
