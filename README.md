@@ -41,6 +41,7 @@ To run SLAM code:
 3. Execute the following command in terminal: ```../Tunnel/Monocular/mono_tum Vocabulary/ORBvoc.txt ../Tunnel/Monocular/tunnel.yaml ../Tunnel/Monocular/```
 
 * The ```Tunnel``` folder also includes images and configuration data from the mapping that was performed with the mobile robot. 
+* The main executable is ```mono_tum```. The terminal commands run all the necessary files automatically though. 
 
 ## UR5
 
